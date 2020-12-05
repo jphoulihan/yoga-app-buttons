@@ -22,16 +22,17 @@ class App extends Component {
     };
 
     this.mapPart = this.mapPart.bind(this);
+    this.clearStretch = this.clearStretch.bind(this);
   }
-
+  //filter function to get object by its id//
   findObjectByID(idToFind) {
     return function (yogaObj) {
       return yogaObj.id === idToFind;
     };
   }
-
+  //we then use that filter function inside a map function triggered//
   mapPart(yogaID) {
-    let filteredStretch = this.state.apiDataBeginner
+    let filteredStretch = this.state.apiDataIntermediate
       .filter(this.findObjectByID(yogaID))
       .map((y) => (
         <div className="card-group">
@@ -74,6 +75,7 @@ class App extends Component {
       //access different parts of the json array by initializing this.setState and creating key:value pairs.
       this.setState({ apiDataBeginner: jsonResult.beginner });
       this.setState({ apiDataIntermediate: jsonResult.intermediate });
+      this.setState({ apiDataAdvanced: jsonResult.advanced });
       this.setState({ isFetched: true });
     } catch (error) {
       // In the case of an error ...
@@ -107,9 +109,10 @@ class App extends Component {
       //****************App return starts here********************//
       return (
         <div className="App">
-          {/*start of drop down button menu*/}
+          <h1>QUICK STRETCH</h1>
+          {/*start of drop down beginner button menu*/}
           <button
-            className="btn btn-secondary dropdown-toggle"
+            className="btn btn-success dropdown-toggle"
             type="button"
             id="dropdownMenu2"
             data-toggle="dropdown"
@@ -122,15 +125,82 @@ class App extends Component {
             {/*//wrap map function around this putting id in button//*/}
             {this.state.apiDataBeginner.map((b) => (
               <button
-                onClick={() => this.mapPart(b.id)}
+                key={b.id}
+                onClick={() => this.mapPart(b.body_part)}
                 className="dropdown-item"
                 type="button"
               >
                 {b.body_part}
               </button>
             ))}
+            <button
+              onClick={this.clearStretch}
+              type="button"
+              className="btn btn-outline-warning btn-block"
+            >
+              Clear
+            </button>
           </div>
+          {/** end of drop down beginner*/}
+          {/*start of intermediate drop down*/}
+          <button
+            className="btn btn-primary dropdown-toggle"
+            type="button"
+            id="dropdownMenu2"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Intermediate
+          </button>
+          <div className="dropdown-menu" aria-labelledby="dropdownMenu2">
+            {/*//wrap map function around this putting id in button//*/}
+            {this.state.apiDataIntermediate.map((i) => (
+              <button
+                key={i.id}
+                onClick={() => this.mapPart(i.id)}
+                className="dropdown-item"
+                type="button"
+              >
+                {i.body_part}
+              </button>
+            ))}
+            <button
+              onClick={this.clearStretch}
+              type="button"
+              className="btn btn-outline-warning btn-block"
+            >
+              Clear
+            </button>
+          </div>
+          {/*end of advanced drop down*/}
+          {/*below is a div container contents is each stretch*/}
           <div>{this.state.stretches}</div>
+
+          {/* <div className="card-group">
+        {this.state.apiData.map((person) => (
+          <div className="card text-center">
+            <div class="card">
+              <div className="card-body">
+                <img
+                  className="card-img-top"
+                  alt="yogapic"
+                  src={person.imgURL}
+                  key={person.id}
+                />
+
+                <h3 className="card-title">{person.body_part}</h3>
+                <h5 className="car-title">{person.position}</h5>
+                <p className="card-text">{person.description}</p>
+
+                <audio controls autoplay>
+                  <source src={person.audio} />
+                </audio>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div> */}
         </div>
       ); // end of return
     } // end of the else statement.
@@ -138,36 +208,10 @@ class App extends Component {
 } // end of App class
 
 //***************************Beginner Mapping Content Component****************************//
-// class Beginner extends Component {
+// class StretchByPart extends Component {
 //   render() {
-//     //this const declaration connects this Beginner class to the App class. It is the way to pass the//
-//     //apiDataBeginner state to call the map function on it from within this component//
 //     const mapBeginner = this.props.mapObjectBeginner;
-//     return (
-//       <div className="card-group">
-//         {mapBeginner.map((person) => (
-//           <div className="card text-center">
-//             <div class="card">
-//               <div className="card-body">
-//                 <img
-//                   className="card-img-top"
-//                   alt="yogapic"
-//                   src={person.imgURL}
-//                 />
-
-//                 <h3 className="card-title">{person.id}</h3>
-//                 <h5 className="car-title">{person.position}</h5>
-//                 <p className="card-text">{person.description}</p>
-
-//                 <audio controls autoplay>
-//                   <source src={person.audio} />
-//                 </audio>
-//               </div>
-//             </div>
-//           </div>
-//         ))}
-//       </div>
-//     );
+//     return <div className="card-group">{mapBeginner}</div>;
 //   }
 // }
 export default App;
